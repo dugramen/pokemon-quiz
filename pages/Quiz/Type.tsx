@@ -3,6 +3,7 @@ import PkGuesser from "../../components/PkGuesser";
 import { sample } from 'lodash';
 import {defaultStyle} from '../../components/QuizStyle';
 import { cacheFetch } from "../../components/Utils";
+import {typeSpan} from "../../components/PkType";
 
 export default function TypeMatchup() {
     const [quiz, setQuiz] = React.useState<any>(1)
@@ -32,10 +33,22 @@ export default function TypeMatchup() {
         `}</style>
 
         <div className={`question `}>
-            {`What type does ${Object.values(types).every(t => t !== '')
-                ? `${adjustedQuiz()}x damage to ${types[0] ?? ''}${types[1] !== types[0]? (' & ' + types[1]): ''}`
+            {`What type does `}
+            {Object.values(types).every(t => t !== '')
+                ? <span>
+                    {adjustedQuiz()}
+                    {'x damage to '}
+                    {types[0]? typeSpan(types[0]) :''}
+                    {types[1] !== types[0]
+                        ? <span>
+                            {' & '} 
+                            {typeSpan(types[1])} 
+                        </span> 
+                        : ''
+                    }
+                </span>
                 : ''
-            }`}
+            }            
         </div>
 
         <PkGuesser
@@ -72,7 +85,13 @@ export default function TypeMatchup() {
                 })
             }}
             verifyGuess={(guess: string) => {
-                const q = adjustedQuiz()
+                const q = types[0] === types[1]
+                    ? quiz > 1 
+                        ? 4
+                        : quiz < 1
+                            ? 0.25
+                            : quiz
+                    : quiz 
                 if (Object.values(matchup).some((val: any) => Math.round(val*4) === Math.round(q*4))) {
                     console.log('there is an answer')
                     return (matchup.hasOwnProperty(guess)
