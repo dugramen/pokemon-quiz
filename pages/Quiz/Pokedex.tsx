@@ -1,6 +1,8 @@
 import React from "react";
 import PkGuesser from "../../components/PkGuesser";
 import {defaultStyle} from '../../components/QuizStyle';
+import {typeSpan} from '../../components/PkType';
+import {capitalize} from '../../components/Utils';
 
 interface PKData {
     [x: number | string | symbol]: any;
@@ -22,15 +24,25 @@ export default function Pokedex(props: any) {
             return flavor?.replaceAll(reg, "-----").split(/[.]+/).map(n => <div>{n}</div>)
         },
         types: (data: PKData) => {
-            return `Type: ${data?.types[0].type.name}${data?.types.length > 1? ` & ${data?.types[1].type.name}`: ''}`
+            return <span>
+                {`Type: `}
+                {typeSpan(data?.types[0].type.name)}
+                {data?.types.length > 1
+                    ? <span>
+                        {' & '}
+                        {typeSpan(data?.types[1].type.name)}
+                    </span>
+                    : ''
+                }
+            </span>
         },
         shape: (data: PKData) => {
-            return `Shape: ${data?.shape?.name}`
+            return `Shape: ${capitalize(data?.shape?.name)}`
         },
-        generation: (data: PKData) => (`${data.generation.name}`),
+        generation: (data: PKData) => (`${capitalize(data.generation.name)}`),
         title: (data: PKData) => {
             const en = data?.genera.find((entry: any) => entry.language.name === 'en')
-            return en.genus
+            return capitalize(en.genus)
         }
     }
 
@@ -66,8 +78,7 @@ export default function Pokedex(props: any) {
                 flex-direction: column;
                 align-items: center;
                 gap: 8px;
-                font-size: 1.17em;
-                font-weight: bold;
+                font-size: 16px;
             }
         `}</style>
 
@@ -77,21 +88,24 @@ export default function Pokedex(props: any) {
 
         <PkGuesser
             customFetchHandler={async (id) => {
+                setClues({})
+
                 fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
-                    .then(response => response.json())
-                    .then((data) => {
-                        setPkName(data.name)
-                        setPkData(old => ({...old, ...data}))
-                        setClues({})
-                        addClue("flavor")
-                        console.log('complete species fetch')
-                    })
+                .then(response => response.json())
+                .then((data) => {
+                    setPkName(data.name)
+                    setPkData(old => ({...old, ...data}))
+                    setClues({})
+                    addClue("flavor")
+                    console.log('complete species fetch')
+                })
+
                 fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        setPkData(old => ({...old, ...data}))
-                        console.log('complete normal fetch')
-                    })
+                .then(response => response.json())
+                .then(data => {
+                    setPkData(old => ({...old, ...data}))
+                    console.log('complete normal fetch')
+                })
             }}
         />
         

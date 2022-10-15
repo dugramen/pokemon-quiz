@@ -30,7 +30,19 @@ export default function Header() {
             key={label}
             onClick={() => setMenuOpen(false)}
         >
+            <style jsx>{`
+                .nav-item {
+                    color: ${isMobile? '#eeeeee': 'gray'};
+                    transition: .2s;
+                }
+                .nav-item:hover {
+                    color: #eeeeee;
+                    opacity: 1;
+                }    
+            `}</style>
+
             <Link
+                className="link"
                 href={`/Quiz/${label}`}
             >{label}</Link>
         </h2>

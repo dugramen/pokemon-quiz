@@ -7,11 +7,12 @@ export const defaultStyle = css`
         gap: 12px;
         justify-content: center;
         padding: 20px 40px;
+        font-weight: normal;
+        color: #eeeeee;
     }
 
     .input-container {
         display: flex;
         flex-direction: column;
-
     }
 `

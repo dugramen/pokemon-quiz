@@ -33,7 +33,7 @@ export default function PkGuesser(props: Props) {
 
     React.useEffect(() => {
         if (firstRender.current) {
-            console.log('getting new pokemon')
+            // console.log('getting new pokemon')
             fetchNewPokemon().catch(console.error);
         } 
         firstRender.current = false;
@@ -46,6 +46,10 @@ export default function PkGuesser(props: Props) {
     }
 
     async function submitGuess(skipped = false) {
+        if (pkName === null) {
+            console.log('still loading bro')
+            return
+        }
         resetAnimation(animRef)
         resetAnimation(contentRef)
 
@@ -56,7 +60,7 @@ export default function PkGuesser(props: Props) {
         const isCorrect = props.verifyGuess?.(val) ?? 
             (pkName.toLowerCase().replace('-', '').replace(' ', '') === val.toLowerCase().replace('-', '').replace(' ', ''))
         if (isCorrect || skipped) {
-            console.log('you are very correct sir')
+            // console.log('you are very correct sir')
             props?.onGuessedCorrectly?.()
             setPkName(null)
             setAnimState(1)
@@ -67,23 +71,24 @@ export default function PkGuesser(props: Props) {
             fetchNewPokemon().catch(console.error);
         }
         else {
-            console.log('try again')
+            // console.log('try again')
             setAnimState(2)
         }
     }
 
     async function fetchNewPokemon() {
         const pkId = Math.ceil(Math.random() * 900)
-        setPkName(PokeMap[pkId].name)
         console.log(`custom fetching ${PokeMap[pkId].name}`)
         if (props.customFetchHandler) {
             props?.customFetchHandler?.(pkId)
+            setPkName(PokeMap[pkId].name)
         }
         else {
             const res = await cacheFetch(props.fetchLink?.(pkId) ?? `https://pokeapi.co/api/v2/pokemon/${pkId}`)
             if (res) {
                 const data = await res.json()
                 props?.onNewData?.(data)
+                setPkName(PokeMap[pkId].name)
             }
         }
     }
@@ -99,13 +104,40 @@ export default function PkGuesser(props: Props) {
                 position: relative;
                 z-index: 0;
             }
+            input {
+                border: none;
+                outline: none;
+                background-color: rgba(255, 255, 255, 0.25);
+                border-radius: 40px;
+                padding: 12px 16px;
+                z-index: -1;
+            }
+            input::placeholder {
+                transition: 0.2s;
+                color: hsl(0, 0%, 70%);
+            }
+            input:hover::placeholder {
+                color: white;
+            }
+            .skip-button {
+                border: none;
+                background: none;
+                outline: none;
+                text-decoration: underline;
+                cursor: pointer;
+            }
 
             @keyframes expand {
                 from {
                     opacity: .85;
+                    width: 100%;
+                    height: 100%;
                 }
                 to {
-                    transform: scaleX(1.5) scaleY(3);
+                    top: -100%;
+                    left: -25%;
+                    width: 150%;
+                    height: 300%;
                     opacity: 0;
                 }
             }
@@ -149,7 +181,7 @@ export default function PkGuesser(props: Props) {
                 bottom: 0;
                 top: 0;
                 z-index: -2;
-                border-radius: 8px;
+                border-radius: 100000000000000px;
                 opacity: 0;
 
                 background-color: green;
@@ -175,21 +207,23 @@ export default function PkGuesser(props: Props) {
 
         <div ref={animRef} className={`animator ${isCorrect?'correct':''} ${isWrong?'wrong':''}`}></div>
 
-        <div ref={contentRef} className={`content-${isCorrect?'correct':''}${isWrong?'wrong':''}`}>
+        <div ref={contentRef} className={`content-container content-${isCorrect?'correct':''}${isWrong?'wrong':''}`}>
             <input
                 ref={inputRef}
                 onKeyDown={(event) => {
                     if (event.key === 'Enter') {submitGuess()}
                 }}
+                placeholder='Enter your guess...'
             />
 
-            <button
+            {/* <button
                 onClick={() => submitGuess}
-            >{'->'}</button>
+            >{'->'}</button> */}
 
             <button
-                onClick={() => submitGuess(true)}
-            >Skip</button>
+                className="skip-button"
+                onClick={() => pkName !== null && submitGuess(true)}
+            >or skip</button>
         </div>
     </div>
     )

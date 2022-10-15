@@ -3,7 +3,7 @@ export async function cacheFetch(request: RequestInfo | URL, options?: any) {
     const cache = await caches.open('pokeapi');
     const response = await cache.match(request)
     if (response !== undefined) {
-        console.log('existing request ', response)
+        console.log('existing request ', request)
         return response
     }
     else {
@@ -12,3 +12,7 @@ export async function cacheFetch(request: RequestInfo | URL, options?: any) {
         return cache.match(request)
     }
 }
+
+export const capitalize = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+} 

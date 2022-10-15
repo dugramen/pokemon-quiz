@@ -13,15 +13,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   React.useEffect(() => {
     const handleStart = (url: string) => {
       setLoading(true)
-      window.setTimeout(() => setLoading(false), 2000)
+      setTimeout(() => setLoading(false), 1000)
     }
-    // const handleComplete = (url: string) => {setLoading(false)}
+    const handleComplete = (url: string) => {setLoading(false)}
     router.events.on('routeChangeStart', handleStart)
-    // router.events.on('routeChangeComplete', handleComplete)
+    router.events.on('routeChangeComplete', handleComplete)
 
     return () => {
       router.events.off('routeChangeStart', handleStart)
-      // router.events.off('routeChangeComplete', handleComplete)
+      router.events.off('routeChangeComplete', handleComplete)
     }
   })
 
@@ -31,18 +31,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
 
       <style jsx>{`
-        @keyframes load-in {
-          0% {
-            transform: rotate(0deg);
-          }
-          30% {
-            transform: rotate(0deg) scale(.7);
-          }
-          100% {
-            transform: rotate(-30deg);
-          }
-        }
-        @keyframes rotating {
+        @keyframes rotating { /* ease-in-out */
           0% {
             transform: rotate(-30deg);
           }
@@ -59,102 +48,66 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             transform: rotate(330deg);
           }
         }
-
-        @keyframes top-half {
+        @keyframes three-sixty {
           from {
-            transform: translateY(-50vh);
+            transform: rotate(0deg);
           }
           to {
-            transform: translateY(0);
+            transform: rotate(360deg);
           }
         }
-        @keyframes slide-in-bottom {
-          from {
-            transform: translateY(50vh);
-          }
-          to {
-            transform: translateY(0);
-          }
-        }
-        @keyframes slide-in-top {
-          from {
-            transform: translateY(calc(-50vh - 100%));
-          }
-          to {
-            transform: translateY(-100%);
-          }
-        }
-
-        .load-animation {
+        .loading-container {
           position: fixed;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-
-          animation: rotating 1.5s linear infinite, load-in .6s;
-          animation-delay: .7s, .2s;
-          animation-timing-function: ease-in-out;
+          bottom: 12px;
+          right: 12px;
+          animation: three-sixty .5s linear infinite;
+          opacity: .9;
         }
-
+        .loading {
+          display: flex;
+          flex-direction: column;
+          transition: .3s;
+          transform: scale(1);
+        }
+        .out {
+          transform: scale(0);
+        }
         .ball {
-          position: absolute;
-          left: calc(50vw - 100px);
-          width: 200px;
-          height: 100px;
-          z-index: 20;
-          border: 4px solid black;
-          top: 50vh;
+          width: 50px;
+          height: 25px;
+          border-radius: 25px;
+          border: solid 4px black;
+        }
+        .top {
+          background-color: red;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
         }
         .bottom {
           background-color: white;
-          border-radius: 0 0 100px 100px;
-          animation: slide-in-bottom;
-          animation-duration: .2s;
-          animation-timing-function: ease-in;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
         }
-        .top {
-          transform: translateY(-100%);
-          background-color: red;
-          border-radius: 100px 100px 0 0;
-          animation: slide-in-top;
-          animation-duration: .2s;
-          animation-timing-function: ease-in;
-        }
-
-        .half {
+        .dot {
           position: absolute;
-          left: 0;
-          top: 0;
-          bottom: 0;
-          right: 0;
-          background-color: black;
-        }
-        .top-half {
-          bottom: 50vh;
-          animation: top-half;
-          animation-duration:  .2s;
-          animation-timing-function: ease-in;
-        }
-        .bottom-half {
-          top: 50vh;
-          animation: slide-in-bottom;
-          animation-duration: .2s;
-          animation-timing-function: ease-in;
+          left: 50%;
+          top: 50%;
+          width: 15px;
+          height: 15px;
+          border: solid 4px black;
+          border-radius: 15px;
+          transform: translateX(-50%) translateY(-50%);
+          background-color: white;
         }
       `}</style>
 
-      {loading && 
-      <div className='load'>
-        <div className='half bottom-half'/>
-        <div className='half top-half'/>
-
-        <div className='load-animation'>
-          <div className='top ball'></div>
-          <div className='bottom ball'></div>
+      <div className={`loading-container`}>
+        <div className={`loading ${loading? "in": "out"}`}>
+          <div className='ball top'/>
+          <div className='ball bottom'/>
+          <div className='dot'/>
         </div>
       </div>
-      }
     </div>
   </Context.Provider>
   
