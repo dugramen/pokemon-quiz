@@ -39,6 +39,7 @@ export default function Item(props: Props) {
         sprite: '',
         description: '',
     })
+    const [hintShown, setHintShown] = React.useState(false)
 
     return (
     <div className="app">
@@ -49,15 +50,19 @@ export default function Item(props: Props) {
                 height: 100px;
                 image-rendering: pixelated;
             }
+            .description {
+                font-size: 16px;
+                font-weight: normal;
+            }
         `}</style>
 
         <img
             src={itemData.sprite}
         />
 
-        <h3>
+        {hintShown && <h3 className="description">
             {itemData.description}
-        </h3>
+        </h3>}
 
         <PkGuesser
             customFetchHandler={() => {
@@ -65,6 +70,7 @@ export default function Item(props: Props) {
                 const name = props.items[id].name
                 console.log(name)
                 setItemName(name)
+                setHintShown(false)
                 cacheFetch(props.items[id].url)
                 .then(response => response?.json())
                 .then(data => {
@@ -80,6 +86,13 @@ export default function Item(props: Props) {
             } 
         }
         />
+
+        <button
+            className="hint-button"
+            onClick={() => setHintShown(true)}
+        >
+            Hint
+        </button>
     </div>
     )
 }

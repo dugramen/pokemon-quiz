@@ -58,6 +58,7 @@ export default function Header() {
             }
             .nav-container {
                 padding: 4px 30px;
+                padding-right: 0px;
                 /*background-color: rebeccapurple;*/
                 position: fixed;
                 left: 0;
@@ -70,11 +71,14 @@ export default function Header() {
             }
 
             button {
-                border: none;                
+                border: none;  
+                background: none;              
             }
             .hamburger {
                 margin-left: auto;
-                padding: 8px;
+                padding: 20px;
+            }
+            .hamburger-button {
             }
 
             .modal {
@@ -109,10 +113,16 @@ export default function Header() {
             {isMobile 
             ?
                 <div className="hamburger">
-                    <button onClick={() => setMenuOpen(true)}>
-                        <h2>
+                    <button className="hamburger-button" onClick={() => setMenuOpen(true)}>
+                        <img
+                            src='/menu-icon.svg'
+                            alt='menu icon'
+                            width='30px'
+                            height='30px'
+                        />
+                        {/* <h2>
                             Menu
-                        </h2>
+                        </h2> */}
                     </button>
 
                     <div className={`modal ${menuOpen? 'opened': 'closed'}`}>
