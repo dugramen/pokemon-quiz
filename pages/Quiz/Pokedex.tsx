@@ -21,7 +21,7 @@ export default function Pokedex(props: any) {
             const flavor: string = enEntries.flavor_text ?? ""
             const reg = new RegExp(data?.name ?? "", "ig")
             // return flavor?.replaceAll(reg, "-----")
-            return flavor?.replaceAll(reg, "-----").split(/[.]+/).map(n => <div>{n}</div>)
+            return flavor?.replaceAll(reg, "-----").split(/[.]+/).map((n, i) => <div key={i}>{n}</div>)
         },
         types: (data: PKData) => {
             return <span>
