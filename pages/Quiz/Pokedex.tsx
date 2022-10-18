@@ -59,7 +59,7 @@ export default function Pokedex(props: any) {
         }
     }
 
-    const renderedClues = Object.values(clues).map(clue => <div>{clue?.(pkData)}</div> ?? "Error")
+    const renderedClues = Object.values(clues).map((clue, i) => <div key={i}>{clue?.(pkData)}</div> ?? "Error")
 
     return (
     <div className="app">
