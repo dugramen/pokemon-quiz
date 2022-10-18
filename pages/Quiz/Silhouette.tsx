@@ -41,7 +41,7 @@ export default function Silhouette(props: any) {
             }
 
             .silhouette {
-                filter: brightness(0) invert(.7);
+                filter: brightness(0) invert(.8);
                 opacity: ${guessState.current === Guess.correct? '0': '1'};
                 transition: ${(guessState.current === Guess.correct? '1s': '0s')};
             }

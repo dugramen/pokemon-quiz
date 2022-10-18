@@ -25,7 +25,7 @@ const Home: NextPage = () => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding-bottom: 100px;
+          padding-bottom: 150px;
           justify-content: center;
           height: calc(100vh - 100px);
         }
@@ -40,7 +40,7 @@ const Home: NextPage = () => {
           opacity: 0;
           margin-top: 10px;
           animation: in 1s forwards;
-          animation-delay: 1s;
+          animation-delay: .9s;
         }
       `}</style>
 
