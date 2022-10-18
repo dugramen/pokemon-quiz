@@ -92,14 +92,15 @@ export default function TypeMatchup() {
                             ? 0.25
                             : quiz
                     : quiz 
+                const guessLowered = guess.toLowerCase().replaceAll(' ', '')
                 if (Object.values(matchup).some((val: any) => Math.round(val*4) === Math.round(q*4))) {
-                    console.log('there is an answer')
-                    return (matchup.hasOwnProperty(guess)
-                    ? Math.round(matchup[guess]*4) === Math.round(q*4)
+                    console.log(matchup)
+                    return (matchup.hasOwnProperty(guessLowered)
+                    ? Math.round(matchup[guessLowered]*4) === Math.round(q*4)
                     : false)
                 } else {
-                    console.log('answer is non')
-                    return guess === 'none'
+                    console.log('answer is none')
+                    return guessLowered === 'none' || guessLowered === 'nothing'
                 }
             }}
         />

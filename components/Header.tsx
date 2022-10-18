@@ -10,13 +10,14 @@ export default function Header() {
         'Type',
         'Item'
     ]
-    const [width, setWidth] = React.useState<any>()
+    const [width, setWidth] = React.useState<any>(700)
     const [menuOpen, setMenuOpen] = React.useState(false)
 
     React.useEffect(() => {
         const handleResize = () => {
             setWidth(window.innerWidth)
         }
+        handleResize()
         window.addEventListener('resize', handleResize)
         return (() => {
             window.removeEventListener('resize', handleResize)

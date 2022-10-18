@@ -81,7 +81,7 @@ export default function Item(props: Props) {
                 })
             }}
             verifyGuess={guess => {        
-                const alphaNum = (str: string) => str.replace(/[^a-zA-Z0-9 ]/g, '').replaceAll(' ', '');
+                const alphaNum = (str: string) => str.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replaceAll(' ', '');
                 return alphaNum(guess) === alphaNum(itemName)
             } 
         }
