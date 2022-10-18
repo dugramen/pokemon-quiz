@@ -125,6 +125,11 @@ export default function PkGuesser(props: Props) {
                 outline: none;
                 text-decoration: underline;
                 cursor: pointer;
+                color: hsl(0, 0%, 70%);
+                transition: .2s;
+            }
+            .skip-button:hover {
+                color: white;
             }
 
             @keyframes expand {
