@@ -1,5 +1,5 @@
 # Pokemon Quizzes
-A set of random quizzes to test your Pokemon knowladge. All data is grabbed from the public PokeAPI database
+A set of random quizzes to test your Pokemon knowledge. All data is grabbed from the public PokeAPI database
 
 ### Quizes
  - **Silhouette** - Guess the Pokemon based on their silhouette in classic "who's that pokemon" style 
