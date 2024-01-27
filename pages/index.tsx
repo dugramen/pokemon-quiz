@@ -44,7 +44,7 @@ const Home: NextPage = () => {
         }
       `}</style>
 
-      <main className={'main'}>
+      <main className={'main text-2xl'}>
 
         <h1>Hello</h1>
         <h1 className='second'>Choose a quiz from above</h1>
