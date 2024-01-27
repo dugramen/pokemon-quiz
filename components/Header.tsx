@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 export default function Header() {
-  const includedPages = ["Silhouette", "Zoom", "Pokedex", "Type", "Item"];
+  const includedPages = ["Silhouette", "Zoom", "Pokedex", "Type", "Item", "Cries"];
   const [width, setWidth] = React.useState<any>(700);
   const [menuOpen, setMenuOpen] = React.useState(false);
 

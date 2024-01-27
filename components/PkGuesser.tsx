@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { PokeMap } from "./PokeMap";
 import { cacheFetch } from "./Utils";
 import { PokeList } from "../pages/_app";
-import { createPortal } from "react-dom";
 
 export interface PkDataInterface {
   name: string;
@@ -27,7 +26,7 @@ interface Props {
   onHint?: () => any
 }
 
-export default function PkGuesser(props: Props) {
+export default function PkGuesser(props: Props & {className?: string}) {
   const [animState, setAnimState] = React.useState(0);
   const animRef = React.useRef<any>();
   const contentRef = React.useRef<any>();
@@ -119,7 +118,7 @@ export default function PkGuesser(props: Props) {
 
   return (
     <div
-      className={`input-container`}
+      className={`input-container ` + (props.className ?? '')}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -319,4 +318,9 @@ export default function PkGuesser(props: Props) {
       , backElement)} */}
     </div>
   );
+}
+
+
+export const useQuiz = () => {
+
 }
