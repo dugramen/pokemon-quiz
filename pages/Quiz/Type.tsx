@@ -72,7 +72,7 @@ export default function TypeMatchup() {
       </div>
 
       <PkGuesser
-        guessList={pkTypes}
+        guessList={[...pkTypes, 'none']}
         customFetchHandler={() => {
           const randomType = () => Math.ceil(Math.random() * 18);
           setQuiz(sample([0.25, 0.5, 1, 2, 4]));
