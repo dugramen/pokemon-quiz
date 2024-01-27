@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PokeMap } from "./PokeMap";
 import { cacheFetch } from "./Utils";
-import { PokeList } from "../pages/_app";
+import { PokeList, ScoreContext } from "../pages/_app";
 
 export interface PkDataInterface {
   name: string;
@@ -35,6 +35,8 @@ export default function PkGuesser(props: Props & {className?: string}) {
   const [pkName, setPkName] = React.useState<any>(null);
   const firstRender = React.useRef(true);
   const inputRef = React.useRef<HTMLInputElement>();
+
+  const {score, setScore} = useContext(ScoreContext)
 
   const pokes = useContext(PokeList);
   const list = props.guessList ?? Object.keys(pokes ?? {});
@@ -79,6 +81,7 @@ export default function PkGuesser(props: Props & {className?: string}) {
         val.toLowerCase().replace("-", "").replace(" ", "");
     if (isCorrect || skipped) {
       // console.log('you are very correct sir')
+      setScore({correct: score.correct + 1, total: score.total + 1})
       props?.onGuessedCorrectly?.();
       setPkName(null);
       setAnimState(1);
@@ -90,6 +93,7 @@ export default function PkGuesser(props: Props & {className?: string}) {
       fetchNewPokemon().catch(console.error);
     } else {
       // console.log('try again')
+      setScore({correct: score.correct, total: score.total + 1})
       setAnimState(2);
     }
   }
