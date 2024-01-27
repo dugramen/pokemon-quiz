@@ -45,9 +45,14 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <PokeList.Provider value={pokes}>
       <div
-        className="App"
+        className="App relative"
         style={{ height: "100%", display: "flex", flexDirection: "column" }}
       >
+        <div
+          className="absolute inset-0"
+          id="back-layer"
+        />
+
         <Header />
         <Component {...pageProps} />
 
