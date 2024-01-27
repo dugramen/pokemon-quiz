@@ -54,8 +54,9 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <PokeList.Provider value={pokes}>
       <ScoreContext.Provider value={{ score, setScore }}>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"></meta>
         <div
-          className="App relative max-h-[90vh]"
+          className="App relative max-h-[100vh]"
           style={{ height: "100%", display: "flex", flexDirection: "column" }}
         >
           <div className="absolute inset-0" id="back-layer" />
