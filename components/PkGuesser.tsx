@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PokeMap } from "./PokeMap";
 import { cacheFetch } from "./Utils";
 import { PokeList } from "../pages/_app";
+import { createPortal } from "react-dom";
 
 export interface PkDataInterface {
   name: string;
@@ -34,7 +35,7 @@ export default function PkGuesser(props: Props) {
 
   const [pkName, setPkName] = React.useState<any>(null);
   const firstRender = React.useRef(true);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>();
 
   const pokes = useContext(PokeList);
   const list = props.guessList ?? Object.keys(pokes ?? {});
@@ -114,6 +115,7 @@ export default function PkGuesser(props: Props) {
 
   const isCorrect = animState === 1;
   const isWrong = animState === 2;
+
 
   return (
     <div
@@ -251,13 +253,21 @@ export default function PkGuesser(props: Props) {
           ></div>
 
           <input
-            ref={inputRef}
+            ref={ref => {
+              inputRef.current = ref ?? undefined;
+              inputRef.current?.focus()
+            }}
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(event) => {
               if (event.key === "Enter") {
                 submitGuess();
               }
+            }}
+            onBlur={() => {
+              setTimeout(() => {
+                inputRef.current?.focus()
+              }, 10)
             }}
             placeholder="Enter your guess..."
           />
@@ -301,6 +311,12 @@ export default function PkGuesser(props: Props) {
           </div>
         ))}
       </div>
+
+      {/* {backElement && createPortal(
+          <div className="absolute inset-0" onClick={() => inputRef.current?.focus()}>
+
+          </div>
+      , backElement)} */}
     </div>
   );
 }
