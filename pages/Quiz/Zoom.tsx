@@ -35,13 +35,14 @@ export default function Zoom() {
                 setWinner(true)
             }}
             delayNewFetch={() => new Promise(resolve => setTimeout(resolve, 1200))}
+            onHint={() => setZoom(old => old/2.0)}
         />
 
-        <button
+        {/* <button
             onClick={() => setZoom(old => old/2.0)}
         >
             Hint
-        </button>
+        </button> */}
     </div>
     )
 }

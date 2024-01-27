@@ -21,8 +21,9 @@ interface Props {
   onNewData?: (data: any) => void;
   onGuessedCorrectly?: () => void;
   delayNewFetch?: () => Promise<any>;
-  
-  guessList?: string[]
+
+  guessList?: string[];
+  onHint?: () => any
 }
 
 export default function PkGuesser(props: Props) {
@@ -36,7 +37,7 @@ export default function PkGuesser(props: Props) {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const pokes = useContext(PokeList);
-  const list = props.guessList ?? Object.keys(pokes ?? {})
+  const list = props.guessList ?? Object.keys(pokes ?? {});
   // const pokeList = Object.keys(pokes ?? {});
   const filteredPokes = list.filter(
     (poke) => text && poke.toLowerCase().includes(text.toLowerCase())
@@ -81,7 +82,7 @@ export default function PkGuesser(props: Props) {
       props?.onGuessedCorrectly?.();
       setPkName(null);
       setAnimState(1);
-      setText('')
+      setText("");
 
       if (props.delayNewFetch) {
         await props.delayNewFetch();
@@ -227,49 +228,55 @@ export default function PkGuesser(props: Props) {
         }
         .content-wrong {
           animation-name: wrong;
-          animation-duration: .2s;
+          animation-duration: 0.2s;
         }
         .content-correct {
           animation-name: correct;
-          animation-duration: .5s;
+          animation-duration: 0.5s;
         }
       `}</style>
 
       <div
         ref={contentRef}
-        className={`relative content-container content-${isCorrect ? "correct" : ""}${
-          isWrong ? "wrong" : ""
-        }`}
+        className={`relative flex flex-row gap-2 items-center content-container content-${
+          isCorrect ? "correct" : ""
+        }${isWrong ? "wrong" : ""}`}
       >
-        <div
-          ref={animRef}
-          className={`animator ${isCorrect ? "correct" : ""} ${
-            isWrong ? "wrong" : ""
-          }`}
-        ></div>
+        <div>
+          <div
+            ref={animRef}
+            className={`animator ${isCorrect ? "correct" : ""} ${
+              isWrong ? "wrong" : ""
+            }`}
+          ></div>
 
-        <input
-          ref={inputRef}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              submitGuess();
-            }
-          }}
-          placeholder="Enter your guess..."
-        />
+          <input
+            ref={inputRef}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                submitGuess();
+              }
+            }}
+            placeholder="Enter your guess..."
+          />
+        </div>
 
-        {/* <button
-                onClick={() => submitGuess}
-            >{'->'}</button> */}
-
-        <button
-          className="skip-button"
-          onClick={() => pkName !== null && submitGuess(true)}
-        >
-          or skip
-        </button>
+        <div className="flex flex-row gap-2">
+          {props.onHint && <button
+            className="px-3 py-1 rounded-lg transition-all duration-300 hover:px-4 bg-neutral-700 text-gray-300 text-sm"
+            onClick={() => props.onHint?.()}
+          >
+            Hint
+          </button>}
+          <button
+            className="skip-button"
+            onClick={() => pkName !== null && submitGuess(true)}
+          >
+            or skip
+          </button>
+        </div>
       </div>
 
       <div
