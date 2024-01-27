@@ -30,7 +30,7 @@ const categories = {
 }
 
 interface Props {
-    items: [{name: '', url: ''}]
+    items: {name: '', url: ''}[]
 }
 
 export default function Item(props: Props) {
@@ -65,6 +65,7 @@ export default function Item(props: Props) {
         </h3>}
 
         <PkGuesser
+            guessList={props.items.map(item => item.name)}
             customFetchHandler={() => {
                 const id = Math.floor(Math.random() * props.items.length)
                 const name = props.items[id].name
@@ -84,6 +85,7 @@ export default function Item(props: Props) {
                 const alphaNum = (str: string) => str.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replaceAll(' ', '');
                 return alphaNum(guess) === alphaNum(itemName)
             } 
+            
         }
         />
 

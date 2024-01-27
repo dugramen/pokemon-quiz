@@ -21,6 +21,8 @@ interface Props {
   onNewData?: (data: any) => void;
   onGuessedCorrectly?: () => void;
   delayNewFetch?: () => Promise<any>;
+  
+  guessList?: string[]
 }
 
 export default function PkGuesser(props: Props) {
@@ -34,8 +36,9 @@ export default function PkGuesser(props: Props) {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const pokes = useContext(PokeList);
-  const pokeList = Object.keys(pokes ?? {});
-  const filteredPokes = pokeList.filter(
+  const list = props.guessList ?? Object.keys(pokes ?? {})
+  // const pokeList = Object.keys(pokes ?? {});
+  const filteredPokes = list.filter(
     (poke) => text && poke.toLowerCase().includes(text.toLowerCase())
   );
 
