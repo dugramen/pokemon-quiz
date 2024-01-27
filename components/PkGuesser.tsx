@@ -122,7 +122,7 @@ export default function PkGuesser(props: Props & {className?: string}) {
 
   return (
     <div
-      className={`input-container ` + (props.className ?? '')}
+      className={`input-container flex flex-col items-center ` + (props.className ?? '')}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -292,9 +292,12 @@ export default function PkGuesser(props: Props & {className?: string}) {
         </div>
       </div>
 
+      {/* <div className="min-h-10"/> */}
+
       <div
+        className="w-full"
         style={{
-          minHeight: 0,
+          minHeight: 80,
           flex: 1,
           overflow: "auto",
         }}
