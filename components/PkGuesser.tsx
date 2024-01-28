@@ -24,13 +24,17 @@ interface Props {
 
   guessList?: string[];
   onHint?: () => any;
+  maxTries?: number;
+  hintCost?: number;
 }
 
-export default function PkGuesser(props: Props & { className?: string }) {
+export default function PkGuesser({maxTries = 3, hintCost = .4, ...props}: Props & { className?: string }) {
   const [animState, setAnimState] = React.useState(0);
   const animRef = React.useRef<any>();
   const contentRef = React.useRef<any>();
   const [text, setText] = useState("");
+  const [tries, setTries] = useState(maxTries);
+  const [points, setPoints] = useState(1.0);
 
   const [pkName, setPkName] = React.useState<any>(null);
   const firstRender = React.useRef(true);
@@ -79,25 +83,41 @@ export default function PkGuesser(props: Props & { className?: string }) {
       props.verifyGuess?.(val) ??
       pkName.toLowerCase().replace("-", "").replace(" ", "") ===
         val.toLowerCase().replace("-", "").replace(" ", "");
-    if (isCorrect || skipped) {
-      // console.log('you are very correct sir')
-      setScore({
-        correct: score.correct + (skipped ? 0 : 1),
-        total: score.total + 1,
-      });
+
+    const nextQuestion = async () => {
       props?.onGuessedCorrectly?.();
       setPkName(null);
-      setAnimState(1);
       setText("");
 
+      setTries(0)
       if (props.delayNewFetch) {
         await props.delayNewFetch();
       }
-      fetchNewPokemon().catch(console.error);
+      fetchNewPokemon().catch(console.error).finally(() => {
+        setTries(maxTries)
+        setPoints(1)
+      });
+    }
+
+    if (isCorrect || skipped) {
+      // console.log('you are very correct sir')
+      setScore({
+        correct: score.correct + (skipped ? 0 : points),
+        total: score.total + 1,
+      });
+
+      setAnimState(1);
+      await nextQuestion()
     } else {
       // console.log('try again')
-      setScore({ correct: score.correct, total: score.total + 1 });
       setAnimState(2);
+      setScore({ correct: score.correct, total: score.total + 1 });
+      // if (tries <= 1) {
+      //   setScore({ correct: score.correct, total: score.total + 1 });
+      //   await nextQuestion()
+      // } else {
+      //   setTries(old => old - 1)
+      // } 
     }
   }
 
@@ -245,6 +265,10 @@ export default function PkGuesser(props: Props & { className?: string }) {
         }
       `}</style>
 
+      {/* <div className="pb-1">
+        You have {tries} tries for {points.toFixed(2)} points
+      </div> */}
+
       <div
         ref={contentRef}
         className={`relative flex flex-row gap-2 items-center content-container content-${
@@ -284,7 +308,11 @@ export default function PkGuesser(props: Props & { className?: string }) {
           {props.onHint && (
             <button
               className="px-3 py-1 rounded-lg transition-all duration-300 hover:px-4 bg-neutral-700 text-gray-300 text-sm"
-              onClick={() => props.onHint?.()}
+              onClick={() => {
+                // setPoints(old => old - hintCost)
+                setScore({ correct: score.correct, total: score.total + 1 });
+                props.onHint?.()
+              }}
             >
               Hint
             </button>

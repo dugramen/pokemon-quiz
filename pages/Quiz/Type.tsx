@@ -50,7 +50,7 @@ export default function TypeMatchup() {
         }
       `}</style>
 
-      <div className={`question `}>
+      <div className={`question`}>
         {`What type does `}
         {Object.values(types).every((t) => t !== "") ? (
           <span>

@@ -55,10 +55,10 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <PokeList.Provider value={pokes}>
       <ScoreContext.Provider value={{ score, setScore }}>
-        <meta
+        {/* <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
-        ></meta>
+        ></meta> */}
         <div
           className="App relative max-h-[100vh]"
           style={{ height: "100%", display: "flex", flexDirection: "column" }}
@@ -86,10 +86,10 @@ export default function MyApp({ Component, pageProps }) {
                           animationName: "score-correct",
                           animationDuration: "500ms",
                           animationFillMode: "both",
-                          display: s !== score.correct ? 'none' : 'unset'
+                          display: s.toFixed(0) !== score.correct.toFixed(0) ? 'none' : 'unset'
                         }}
                       >
-                        {s}
+                        {score.correct.toFixed(0)}
                       </div>
                     )}
                   </Transition>

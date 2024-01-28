@@ -58,6 +58,7 @@ export default function Item(props: Props) {
 
       <PkGuesser
         onHint={() => setHintShown(true)}
+        hintCost={.5}
         guessList={props.items.map((item) => item.name)}
         customFetchHandler={() => {
           const id = Math.floor(Math.random() * props.items.length);
@@ -72,7 +73,7 @@ export default function Item(props: Props) {
                 sprite: data.sprites.default,
                 description: data.flavor_text_entries.find(
                   (entry: any) => entry.language.name === "en"
-                ).text,
+                )?.text,
               });
             });
         }}

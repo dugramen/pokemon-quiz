@@ -16,7 +16,7 @@ export default function CriesQuiz() {
         //   audioRef.current?.play()
         // }}
         autoPlay={true}
-        className="flex-1"
+        className=""
       />
       <PkGuesser
         onNewData={data => {

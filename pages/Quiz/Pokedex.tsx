@@ -103,6 +103,7 @@ export default function Pokedex(props: any) {
 
       <PkGuesser
         onHint={unusedKeys.length > 0 ? addClue : undefined}
+        hintCost={.2}
         customFetchHandler={async (id) => {
           setClues({});
 

@@ -47,7 +47,7 @@ export default function Silhouette(props: any) {
             }
         `}</style>
 
-        <div className="image-wrapper">
+        <div className="image-wrapper flex-1">
             <img
                 className="poke-image"
                 src={imgSource ?? ""}

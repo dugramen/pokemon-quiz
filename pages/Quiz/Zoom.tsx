@@ -13,8 +13,9 @@ export default function Zoom() {
         <style jsx>{`
             .cropped-image {
                 background-image: url(${src});
-                width: 400px;
+                width: auto;
                 height: 400px;
+                aspect-ratio: 1/1;
                 background-size: ${winner? '100%': `${zoom}%`};
                 background-position: center;
                 transition: ${winner? '.7s': '.4s'};
@@ -22,7 +23,7 @@ export default function Zoom() {
         `}</style>
 
         <div
-            className="cropped-image"
+            className="cropped-image flex-1"
         ></div>
     
         <PkGuesser
