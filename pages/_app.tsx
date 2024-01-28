@@ -19,7 +19,7 @@ export default function MyApp({ Component, pageProps }) {
   const [score, setScore] = useState({ correct: 0, total: 0 });
 
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
+    fetch("https://pokeapi.co/api/v2/pokemon-species?limit=100000&offset=0")
       .then((res) => res.json())
       .then((data) => {
         const p = {};
@@ -66,62 +66,62 @@ export default function MyApp({ Component, pageProps }) {
           {/* <div className="absolute inset-0" id="back-layer" /> */}
 
           <Header />
-
-          <div className="flex flex-col gap-1 items-center text-sm text-neutral-300">
-            Score
-
-            <div className="self-center flex flex-row gap-3 items-center text-sm">
-              <TransitionGroup>
-                {[score.correct - 1, score.correct].map(s => 
-                  <Transition
-                    key={s}
-                    timeout={0}
-                    unmountOnExit
-                    mountOnEnter
-                  >
-                    {(state) => (
-                      <div
-                        className="transition-all text-3xl font-medium"
-                        style={{
-                          animationName: "score-correct",
-                          animationDuration: "500ms",
-                          animationFillMode: "both",
-                          display: s.toFixed(0) !== score.correct.toFixed(0) ? 'none' : 'unset'
-                        }}
-                      >
-                        {score.correct.toFixed(0)}
-                      </div>
-                    )}
-                  </Transition>
-                )}
-              </TransitionGroup>
-              /
-              <TransitionGroup>
-                {[score.total - score.correct - 1, score.total - score.correct].map(s => 
-                  <Transition
-                    key={s}
-                    timeout={0}
-                    unmountOnExit
-                    mountOnEnter
-                  >
-                    {(state) => (
-                      <div
-                        className="transition-all text-3xl font-medium"
-                        style={{
-                          animationName: "score-incorrect",
-                          animationDuration: "500ms",
-                          animationFillMode: "both",
-                          display: s !== (score.total - score.correct) ? 'unset' : 'none'
-                        }}
-                      >
-                        {score.total}
-                      </div>
-                    )}
-                  </Transition>
-                )}
-              </TransitionGroup>
+          {router.pathname.includes("Quiz/") && (
+            <div className="flex flex-col gap-1 items-center text-sm text-neutral-300">
+              Score
+              <div className="self-center flex flex-row gap-3 items-center text-sm">
+                <TransitionGroup>
+                  {[score.correct - 1, score.correct].map((s) => (
+                    <Transition key={s} timeout={0} unmountOnExit mountOnEnter>
+                      {(state) => (
+                        <div
+                          className="transition-all text-3xl font-medium"
+                          style={{
+                            animationName: "score-correct",
+                            animationDuration: "500ms",
+                            animationFillMode: "both",
+                            display:
+                              s.toFixed(0) !== score.correct.toFixed(0)
+                                ? "none"
+                                : "unset",
+                          }}
+                        >
+                          {score.correct.toFixed(0)}
+                        </div>
+                      )}
+                    </Transition>
+                  ))}
+                </TransitionGroup>
+                /
+                <TransitionGroup>
+                  {[
+                    score.total - score.correct - 1,
+                    score.total - score.correct,
+                  ].map((s) => (
+                    <Transition key={s} timeout={0} unmountOnExit mountOnEnter>
+                      {(state) => (
+                        <div
+                          className="transition-all text-3xl font-medium"
+                          style={{
+                            animationName: "score-incorrect",
+                            animationDuration: "500ms",
+                            animationFillMode: "both",
+                            display:
+                              Math.round(s) !==
+                              Math.round(score.total - score.correct)
+                                ? "none"
+                                : "unset",
+                          }}
+                        >
+                          {score.total}
+                        </div>
+                      )}
+                    </Transition>
+                  ))}
+                </TransitionGroup>
+              </div>
             </div>
-          </div>
+          )}
 
           <Component {...pageProps} />
 

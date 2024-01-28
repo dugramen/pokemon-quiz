@@ -2,6 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { PokeMap } from "./PokeMap";
 import { cacheFetch } from "./Utils";
 import { PokeList, ScoreContext } from "../pages/_app";
+import {
+  SwitchTransition,
+  Transition,
+  TransitionGroup,
+} from "react-transition-group";
+import { twMerge } from "tailwind-merge";
 
 export interface PkDataInterface {
   name: string;
@@ -26,6 +32,7 @@ interface Props {
   onHint?: () => any;
   maxTries?: number;
   hintCost?: number;
+  customAnswer?: string;
 }
 
 export default function PkGuesser({
@@ -39,6 +46,7 @@ export default function PkGuesser({
   const [text, setText] = useState("");
   const [tries, setTries] = useState(maxTries);
   const [points, setPoints] = useState(1.0);
+  const [answer, setAnswer] = useState("");
 
   const [pkName, setPkName] = React.useState<any>(null);
   const firstRender = React.useRef(true);
@@ -90,6 +98,7 @@ export default function PkGuesser({
 
     const nextQuestion = async () => {
       props?.onGuessedCorrectly?.();
+      setAnswer(props.customAnswer ?? pkName);
       setPkName(null);
       setText("");
 
@@ -222,21 +231,21 @@ export default function PkGuesser({
           }
         }
         @keyframes correct {
-          0% {
-            transform: translateY(0px);
-          }
-          25% {
-            transform: translateY(-8px);
-          }
-          50% {
-            transform: translateY(0px);
-          }
-          75% {
-            transform: translateY(-4px);
-          }
-          100% {
-            transform: translateY(0px);
-          }
+          // 0% {
+          //   transform: translateY(0px);
+          // }
+          // 25% {
+          //   transform: translateY(-8px);
+          // }
+          // 50% {
+          //   transform: translateY(0px);
+          // }
+          // 75% {
+          //   transform: translateY(-4px);
+          // }
+          // 100% {
+          //   transform: translateY(0px);
+          // }
         }
 
         .animator {
@@ -275,9 +284,27 @@ export default function PkGuesser({
         You have {tries} tries for {points.toFixed(2)} points
       </div> */}
 
+      <SwitchTransition>
+        <Transition timeout={0} key={answer} mountOnEnter unmountOnExit>
+          {(state) => (
+            <div
+              className="overflow-clip text-neutral-400"
+              style={{
+                animationName: answer !== '' ? "show-answer": 'unset',
+                animationDuration: "1.5s",
+                animationFillMode: "both",
+                animationTimingFunction: "ease-in-out",
+              }}
+            >
+              {answer}
+            </div>
+          )}
+        </Transition>
+      </SwitchTransition>
+
       <div
         ref={contentRef}
-        className={`relative flex flex-row gap-2 items-center content-container content-${
+        className={`relative flex flex-row flex-wrap-reverse justify-center gap-2 items-center content-container content-${
           isCorrect ? "correct" : ""
         }${isWrong ? "wrong" : ""}`}
       >
@@ -314,7 +341,9 @@ export default function PkGuesser({
         <div className="flex flex-row gap-2">
           {props.onHint && (
             <button
-              className="px-3 py-1 rounded-lg transition-all duration-300 hover:px-4 bg-neutral-700 text-gray-300 text-sm"
+              className={twMerge(
+                "px-3 py-1 rounded-lg transition-all duration-300 hover:scale-90 bg-neutral-700 text-gray-300 text-sm"
+              )}
               onClick={() => {
                 // setPoints(old => old - hintCost)
                 setScore({ correct: score.correct, total: score.total + 1 });
@@ -325,7 +354,7 @@ export default function PkGuesser({
             </button>
           )}
           <button
-            className="skip-button"
+            className="skip-button whitespace-pre"
             onClick={() => pkName !== null && submitGuess(true)}
           >
             or skip
