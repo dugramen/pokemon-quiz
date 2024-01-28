@@ -19,7 +19,7 @@ export default function MyApp({ Component, pageProps }) {
   const [score, setScore] = useState({ correct: 0, total: 0 });
 
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
+    fetch("https://pokeapi.co/api/v2/pokemon-species?limit=100000&offset=0")
       .then((res) => res.json())
       .then((data) => {
         const p = {};
