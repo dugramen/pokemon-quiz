@@ -111,7 +111,7 @@ export default function MyApp({ Component, pageProps }) {
                           animationName: "score-incorrect",
                           animationDuration: "500ms",
                           animationFillMode: "both",
-                          display: s !== (score.total - score.correct) ? 'unset' : 'none'
+                          display: Math.round(s) !== Math.round(score.total - score.correct) ? 'none' : 'unset'
                         }}
                       >
                         {score.total}
