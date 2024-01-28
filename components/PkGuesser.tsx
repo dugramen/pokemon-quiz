@@ -308,7 +308,7 @@ export default function PkGuesser({
 
       <div
         ref={contentRef}
-        className={`relative flex flex-row gap-2 items-center content-container content-${
+        className={`relative flex flex-row flex-wrap-reverse justify-center gap-2 items-center content-container content-${
           isCorrect ? "correct" : ""
         }${isWrong ? "wrong" : ""}`}
       >
@@ -356,7 +356,7 @@ export default function PkGuesser({
             </button>
           )}
           <button
-            className="skip-button"
+            className="skip-button whitespace-pre"
             onClick={() => pkName !== null && submitGuess(true)}
           >
             or skip

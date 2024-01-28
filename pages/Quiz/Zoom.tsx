@@ -9,7 +9,7 @@ export default function Zoom() {
     const [winner, setWinner] = React.useState(false)
 
     return (
-    <div className="app">
+    <div className="app overflow-clip">
         <style jsx>{defaultStyle}</style>
         <style jsx>{`
             .cropped-image {
@@ -19,7 +19,7 @@ export default function Zoom() {
                 // background-image: url(${src});
                 // background-size: ${winner? '100%': `${zoom}%`};
                 // background-position: center;
-                transition: ${winner? '.7s': '.4s'};
+                // transition: ${winner? '.7s': '.4s'};
             }
         `}</style>
 

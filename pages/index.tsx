@@ -27,7 +27,7 @@ const Home: NextPage = () => {
           align-items: center;
           padding-bottom: 150px;
           justify-content: center;
-          height: calc(100vh - 100px);
+          // height: calc(100vh - 100px);
         }
 
         h1 {
@@ -44,7 +44,7 @@ const Home: NextPage = () => {
         }
       `}</style>
 
-      <main className={'main text-2xl'}>
+      <main className={'main text-2xl h-full min-h-0 flex-1'}>
 
         <h1>Hello</h1>
         <h1 className='second'>Choose a quiz from above</h1>
