@@ -2,6 +2,7 @@ import React from "react";
 import { defaultStyle } from "../../components/QuizStyle";
 import PkGuesser from "../../components/PkGuesser";
 import { cacheFetch } from "../../components/Utils";
+import { SwitchTransition, Transition } from "react-transition-group";
 
 const categories = {
   items: [
@@ -52,13 +53,32 @@ export default function Item(props: Props) {
         }
       `}</style>
 
-      <img src={itemData.sprite} />
-
-      {hintShown && <h3 className="description">{itemData.description}</h3>}
+      <SwitchTransition>
+        <Transition
+          key={itemData.sprite}
+          timeout={300}
+          unmountOnExit
+          mountOnEnter
+        >
+          {(state) => (
+            <div
+              className="flex flex-col items-center gap-1 text-neutral-300 transition-all duration-300"
+              style={{
+                opacity: state === "entered" ? 1 : 0,
+              }}
+            >
+              <img src={itemData.sprite} />
+              {hintShown && (
+                <h3 className="description">{itemData.description}</h3>
+              )}
+            </div>
+          )}
+        </Transition>
+      </SwitchTransition>
 
       <PkGuesser
         onHint={() => setHintShown(true)}
-        hintCost={.5}
+        hintCost={0.5}
         guessList={props.items.map((item) => item.name)}
         customFetchHandler={() => {
           const id = Math.floor(Math.random() * props.items.length);
@@ -77,6 +97,7 @@ export default function Item(props: Props) {
               });
             });
         }}
+        customAnswer={itemName}
         verifyGuess={(guess) => {
           const alphaNum = (str: string) =>
             str
