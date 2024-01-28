@@ -4,6 +4,7 @@ import "../styles/globals.css";
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
+import { Transition, TransitionGroup } from "react-transition-group";
 
 export const PokeList = React.createContext({});
 export const ScoreContext = React.createContext({
@@ -31,8 +32,8 @@ export default function MyApp({ Component, pageProps }) {
   }, []);
 
   useEffect(() => {
-    setScore({correct: 0, total: 0})
-  }, [Component])
+    setScore({ correct: 0, total: 0 });
+  }, [Component]);
 
   React.useEffect(() => {
     const handleStart = (url: string) => {
@@ -54,7 +55,10 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <PokeList.Provider value={pokes}>
       <ScoreContext.Provider value={{ score, setScore }}>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"></meta>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
+        ></meta>
         <div
           className="App relative max-h-[100vh]"
           style={{ height: "100%", display: "flex", flexDirection: "column" }}
@@ -63,7 +67,61 @@ export default function MyApp({ Component, pageProps }) {
 
           <Header />
 
-          <div className="self-center">Score {score.correct} / {score.total}</div>
+          <div className="flex flex-col gap-1 items-center text-sm text-neutral-300">
+            Score
+
+            <div className="self-center flex flex-row gap-3 items-center text-sm">
+              <TransitionGroup>
+                {[score.correct - 1, score.correct].map(s => 
+                  <Transition
+                    key={s}
+                    timeout={0}
+                    unmountOnExit
+                    mountOnEnter
+                  >
+                    {(state) => (
+                      <div
+                        className="transition-all text-3xl font-medium"
+                        style={{
+                          animationName: "score-correct",
+                          animationDuration: "500ms",
+                          animationFillMode: "both",
+                          display: s !== score.correct ? 'none' : 'unset'
+                        }}
+                      >
+                        {s}
+                      </div>
+                    )}
+                  </Transition>
+                )}
+              </TransitionGroup>
+              /
+              <TransitionGroup>
+                {[score.total - score.correct - 1, score.total - score.correct].map(s => 
+                  <Transition
+                    key={s}
+                    timeout={0}
+                    unmountOnExit
+                    mountOnEnter
+                  >
+                    {(state) => (
+                      <div
+                        className="transition-all text-3xl font-medium"
+                        style={{
+                          animationName: "score-incorrect",
+                          animationDuration: "500ms",
+                          animationFillMode: "both",
+                          display: s !== (score.total - score.correct) ? 'unset' : 'none'
+                        }}
+                      >
+                        {score.total}
+                      </div>
+                    )}
+                  </Transition>
+                )}
+              </TransitionGroup>
+            </div>
+          </div>
 
           <Component {...pageProps} />
 

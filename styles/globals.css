@@ -38,3 +38,27 @@ body {
   min-height: 0;
   flex: 1;
 }
+
+@keyframes score-correct {
+  0% {
+    @apply text-neutral-300;
+  }
+  50% {
+    @apply text-green-700;
+  }
+  100% {
+    @apply text-neutral-300;
+  }
+}
+
+@keyframes score-incorrect {
+  0% {
+    @apply text-neutral-300;
+  }
+  50% {
+    @apply text-red-700;
+  }
+  100% {
+    @apply text-neutral-300;
+  }
+}

@@ -23,10 +23,10 @@ interface Props {
   delayNewFetch?: () => Promise<any>;
 
   guessList?: string[];
-  onHint?: () => any
+  onHint?: () => any;
 }
 
-export default function PkGuesser(props: Props & {className?: string}) {
+export default function PkGuesser(props: Props & { className?: string }) {
   const [animState, setAnimState] = React.useState(0);
   const animRef = React.useRef<any>();
   const contentRef = React.useRef<any>();
@@ -36,7 +36,7 @@ export default function PkGuesser(props: Props & {className?: string}) {
   const firstRender = React.useRef(true);
   const inputRef = React.useRef<HTMLInputElement>();
 
-  const {score, setScore} = useContext(ScoreContext)
+  const { score, setScore } = useContext(ScoreContext);
 
   const pokes = useContext(PokeList);
   const list = props.guessList ?? Object.keys(pokes ?? {});
@@ -81,7 +81,10 @@ export default function PkGuesser(props: Props & {className?: string}) {
         val.toLowerCase().replace("-", "").replace(" ", "");
     if (isCorrect || skipped) {
       // console.log('you are very correct sir')
-      setScore({correct: score.correct + 1, total: score.total + 1})
+      setScore({
+        correct: score.correct + (skipped ? 0 : 1),
+        total: score.total + 1,
+      });
       props?.onGuessedCorrectly?.();
       setPkName(null);
       setAnimState(1);
@@ -93,7 +96,7 @@ export default function PkGuesser(props: Props & {className?: string}) {
       fetchNewPokemon().catch(console.error);
     } else {
       // console.log('try again')
-      setScore({correct: score.correct, total: score.total + 1})
+      setScore({ correct: score.correct, total: score.total + 1 });
       setAnimState(2);
     }
   }
@@ -119,10 +122,11 @@ export default function PkGuesser(props: Props & {className?: string}) {
   const isCorrect = animState === 1;
   const isWrong = animState === 2;
 
-
   return (
     <div
-      className={`input-container flex flex-col items-center ` + (props.className ?? '')}
+      className={
+        `input-container flex flex-col items-center ` + (props.className ?? "")
+      }
       style={{
         display: "flex",
         flexDirection: "column",
@@ -256,9 +260,9 @@ export default function PkGuesser(props: Props & {className?: string}) {
           ></div>
 
           <input
-            ref={ref => {
+            ref={(ref) => {
               inputRef.current = ref ?? undefined;
-              inputRef.current?.focus()
+              inputRef.current?.focus();
             }}
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -269,20 +273,22 @@ export default function PkGuesser(props: Props & {className?: string}) {
             }}
             onBlur={() => {
               setTimeout(() => {
-                inputRef.current?.focus()
-              }, 10)
+                inputRef.current?.focus();
+              }, 10);
             }}
             placeholder="Enter your guess..."
           />
         </div>
 
         <div className="flex flex-row gap-2">
-          {props.onHint && <button
-            className="px-3 py-1 rounded-lg transition-all duration-300 hover:px-4 bg-neutral-700 text-gray-300 text-sm"
-            onClick={() => props.onHint?.()}
-          >
-            Hint
-          </button>}
+          {props.onHint && (
+            <button
+              className="px-3 py-1 rounded-lg transition-all duration-300 hover:px-4 bg-neutral-700 text-gray-300 text-sm"
+              onClick={() => props.onHint?.()}
+            >
+              Hint
+            </button>
+          )}
           <button
             className="skip-button"
             onClick={() => pkName !== null && submitGuess(true)}
@@ -327,7 +333,4 @@ export default function PkGuesser(props: Props & {className?: string}) {
   );
 }
 
-
-export const useQuiz = () => {
-
-}
+export const useQuiz = () => {};
