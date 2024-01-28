@@ -7,6 +7,7 @@ import {
   Transition,
   TransitionGroup,
 } from "react-transition-group";
+import { twMerge } from "tailwind-merge";
 
 export interface PkDataInterface {
   name: string;
@@ -284,12 +285,7 @@ export default function PkGuesser({
       </div> */}
 
       <SwitchTransition>
-        <Transition
-          timeout={0}
-          key={answer}
-          mountOnEnter
-          unmountOnExit
-        >
+        <Transition timeout={0} key={answer} mountOnEnter unmountOnExit>
           {(state) => (
             <div
               className="overflow-clip text-neutral-400"
@@ -297,7 +293,7 @@ export default function PkGuesser({
                 animationName: "show-answer",
                 animationDuration: "1.5s",
                 animationFillMode: "both",
-                animationTimingFunction: 'ease-in-out'
+                animationTimingFunction: "ease-in-out",
               }}
             >
               {answer}
@@ -345,7 +341,9 @@ export default function PkGuesser({
         <div className="flex flex-row gap-2">
           {props.onHint && (
             <button
-              className="px-3 py-1 rounded-lg transition-all duration-300 hover:px-4 bg-neutral-700 text-gray-300 text-sm"
+              className={twMerge(
+                "px-3 py-1 rounded-lg transition-all duration-300 hover:scale-90 bg-neutral-700 text-gray-300 text-sm"
+              )}
               onClick={() => {
                 // setPoints(old => old - hintCost)
                 setScore({ correct: score.correct, total: score.total + 1 });
