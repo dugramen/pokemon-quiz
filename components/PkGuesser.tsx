@@ -28,7 +28,11 @@ interface Props {
   hintCost?: number;
 }
 
-export default function PkGuesser({maxTries = 3, hintCost = .4, ...props}: Props & { className?: string }) {
+export default function PkGuesser({
+  maxTries = 3,
+  hintCost = 0.4,
+  ...props
+}: Props & { className?: string }) {
   const [animState, setAnimState] = React.useState(0);
   const animRef = React.useRef<any>();
   const contentRef = React.useRef<any>();
@@ -89,15 +93,17 @@ export default function PkGuesser({maxTries = 3, hintCost = .4, ...props}: Props
       setPkName(null);
       setText("");
 
-      setTries(0)
+      setTries(0);
       if (props.delayNewFetch) {
         await props.delayNewFetch();
       }
-      fetchNewPokemon().catch(console.error).finally(() => {
-        setTries(maxTries)
-        setPoints(1)
-      });
-    }
+      fetchNewPokemon()
+        .catch(console.error)
+        .finally(() => {
+          setTries(maxTries);
+          setPoints(1);
+        });
+    };
 
     if (isCorrect || skipped) {
       // console.log('you are very correct sir')
@@ -107,7 +113,7 @@ export default function PkGuesser({maxTries = 3, hintCost = .4, ...props}: Props
       });
 
       setAnimState(1);
-      await nextQuestion()
+      await nextQuestion();
     } else {
       // console.log('try again')
       setAnimState(2);
@@ -117,7 +123,7 @@ export default function PkGuesser({maxTries = 3, hintCost = .4, ...props}: Props
       //   await nextQuestion()
       // } else {
       //   setTries(old => old - 1)
-      // } 
+      // }
     }
   }
 
@@ -284,6 +290,7 @@ export default function PkGuesser({maxTries = 3, hintCost = .4, ...props}: Props
           ></div>
 
           <input
+            type="search"
             ref={(ref) => {
               inputRef.current = ref ?? undefined;
               inputRef.current?.focus();
@@ -311,7 +318,7 @@ export default function PkGuesser({maxTries = 3, hintCost = .4, ...props}: Props
               onClick={() => {
                 // setPoints(old => old - hintCost)
                 setScore({ correct: score.correct, total: score.total + 1 });
-                props.onHint?.()
+                props.onHint?.();
               }}
             >
               Hint

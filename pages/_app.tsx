@@ -60,10 +60,10 @@ export default function MyApp({ Component, pageProps }) {
           content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
         ></meta> */}
         <div
-          className="App relative max-h-[100vh]"
+          className="App relative max-h-[100vh] h-full"
           style={{ height: "100%", display: "flex", flexDirection: "column" }}
         >
-          <div className="absolute inset-0" id="back-layer" />
+          {/* <div className="absolute inset-0" id="back-layer" /> */}
 
           <Header />
 
