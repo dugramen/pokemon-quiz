@@ -290,7 +290,7 @@ export default function PkGuesser({
             <div
               className="overflow-clip text-neutral-400"
               style={{
-                animationName: "show-answer",
+                animationName: answer !== '' ? "show-answer": 'unset',
                 animationDuration: "1.5s",
                 animationFillMode: "both",
                 animationTimingFunction: "ease-in-out",
