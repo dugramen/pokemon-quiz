@@ -138,7 +138,7 @@ export default function PkGuesser({
 
   async function fetchNewPokemon() {
     const pkId = Math.ceil(Math.random() * 900);
-    console.log(`custom fetching ${PokeMap[pkId].name}`);
+    // console.log(`custom fetching ${PokeMap[pkId].name}`);
     if (props.customFetchHandler) {
       props?.customFetchHandler?.(pkId);
       setPkName(PokeMap[pkId].name);
