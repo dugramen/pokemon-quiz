@@ -78,3 +78,7 @@ body {
     height: 0px;
   }
 }
+
+img {
+  pointer-events: none;
+}
