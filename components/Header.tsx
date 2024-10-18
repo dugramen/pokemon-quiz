@@ -1,10 +1,22 @@
-import React from "react";
+import React, { ComponentProps, useContext } from "react";
 import Link from "next/link";
+import { GenerationsContext } from "./generations";
+import { twMerge } from "tailwind-merge";
+// import { FaGear } from "react-icons/fa6";
+import {IoSettingsOutline} from 'react-icons/io5'
 
 export default function Header() {
-  const includedPages = ["Silhouette", "Zoom", "Pokedex", "Type", "Item", "Cries"];
+  const includedPages = [
+    "Silhouette",
+    "Zoom",
+    "Pokedex",
+    "Type",
+    "Item",
+    "Cries",
+  ];
   const [width, setWidth] = React.useState<any>(700);
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const {generations, setGenerations} = useContext(GenerationsContext);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -17,30 +29,44 @@ export default function Header() {
     };
   }, []);
 
-  const isMobile = width <= 768;
-  const createNavItems = () =>
-    includedPages.map((label) => (
-      <h2
-        className="nav-item text-2xl text-gray-400 hover:text-gray-300 py-5 font-bold"
-        key={label}
-        onClick={() => setMenuOpen(false)}
-      >
-        <style jsx>{`
-          .nav-item {
-            color: ${isMobile ? "#eeeeee" : "gray"};
-            transition: 0.2s;
-          }
-          .nav-item:hover {
-            color: #eeeeee;
-            opacity: 1;
-          }
-        `}</style>
+  const navLinks = (
+    <>
+      {includedPages.map((quiz) => (
+        <NavLink key={quiz} href={`/Quiz/${quiz}`} setMenuOpen={setMenuOpen}>
+          {quiz}
+        </NavLink>
+      ))}
+      <NavLink href={"/Settings"} className="ml-auto" setMenuOpen={setMenuOpen}>
+        <IoSettingsOutline />
+        Settings
+      </NavLink>
+    </>
+  );
 
-        <Link className="" href={`/Quiz/${label}`}>
-          {label}
-        </Link>
-      </h2>
-    ));
+  const isMobile = width <= 768;
+  // const createNavItems = () =>
+  //   includedPages.map((label) => (
+  //     <h2
+  //       className="nav-item text-2xl text-gray-400 hover:text-gray-300 py-5 font-bold"
+  //       key={label}
+  //       onClick={() => setMenuOpen(false)}
+  //     >
+  //       <style jsx>{`
+  //         .nav-item {
+  //           color: ${isMobile ? "#eeeeee" : "gray"};
+  //           transition: 0.2s;
+  //         }
+  //         .nav-item:hover {
+  //           color: #eeeeee;
+  //           opacity: 1;
+  //         }
+  //       `}</style>
+
+  //       <Link className="" href={`/Quiz/${label}`}>
+  //         {label}
+  //       </Link>
+  //     </h2>
+  //   ));
 
   return (
     <div className="Header">
@@ -52,7 +78,7 @@ export default function Header() {
         }
         .nav-container {
           padding: 4px 30px;
-          padding-right: 0px;
+          // padding-right: 0px;
           /*background-color: rebeccapurple;*/
           position: fixed;
           left: 0;
@@ -126,14 +152,34 @@ export default function Header() {
 
             <div className={`modal ${menuOpen ? "opened" : "closed"}`}>
               <button onClick={() => setMenuOpen(false)}>X</button>
-              <div className="mobile-menu">{createNavItems()}</div>
+              <div className="mobile-menu">{navLinks}</div>
             </div>
           </div>
         ) : (
-          createNavItems()
+          navLinks
         )}
         {}
       </div>
     </div>
+  );
+}
+
+// function NavLinks() {
+//   return <>
+
+//   </>
+// }
+
+function NavLink(p: ComponentProps<typeof Link> & { setMenuOpen }) {
+  return (
+    <Link
+      {...p}
+      className={twMerge(
+        "nav-item text-2xl text-gray-400 hover:text-gray-300 py-5 font-bold flex flex-row gap-2 items-center",
+        p.className
+      )}
+      onClick={() => p.setMenuOpen(false)}
+      // shallow={false}
+    ></Link>
   );
 }

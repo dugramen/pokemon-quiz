@@ -8,6 +8,8 @@ import {
   TransitionGroup,
 } from "react-transition-group";
 import { twMerge } from "tailwind-merge";
+import { GenerationsContext, genRangesPokemon } from "./generations";
+import { useRouter } from "next/router";
 
 export interface PkDataInterface {
   name: string;
@@ -47,12 +49,14 @@ export default function PkGuesser({
   const [tries, setTries] = useState(maxTries);
   const [points, setPoints] = useState(1.0);
   const [answer, setAnswer] = useState("");
+  const router = useRouter()
 
   const [pkName, setPkName] = React.useState<any>(null);
   const firstRender = React.useRef(true);
   const inputRef = React.useRef<HTMLInputElement>();
 
   const { score, setScore } = useContext(ScoreContext);
+  const {generations} = useContext(GenerationsContext)
 
   const pokes = useContext(PokeList);
   const list = props.guessList ?? Object.keys(pokes ?? {});
@@ -61,13 +65,13 @@ export default function PkGuesser({
     (poke) => text && poke.toLowerCase().includes(text.toLowerCase())
   );
 
-  React.useEffect(() => {
-    if (firstRender.current) {
-      // console.log('getting new pokemon')
+  useEffect(() => {
+    if (!firstRender.current) {
+      console.log('getting new pokemon ', generations)
       fetchNewPokemon().catch(console.error);
     }
     firstRender.current = false;
-  }, []);
+  }, [generations]);
 
   function resetAnimation(ref: any) {
     ref.current.style.animation = "none";
@@ -137,12 +141,15 @@ export default function PkGuesser({
   }
 
   async function fetchNewPokemon() {
-    const pkId = Math.ceil(Math.random() * 900);
-    // console.log(`custom fetching ${PokeMap[pkId].name}`);
+    // let pkId = Math.ceil(Math.random() * 900);
+    const ranges = generations.map(gen => [genRangesPokemon[gen - 1], genRangesPokemon[gen]] as [number, number])
+    const pkId = getRandomInRanges(ranges) ?? Math.ceil(Math.random() * 900);
+    console.log(`custom fetching ${pkId} ${PokeMap[pkId].name}`);
     if (props.customFetchHandler) {
       props?.customFetchHandler?.(pkId);
       setPkName(PokeMap[pkId].name);
     } else {
+
       const res = await cacheFetch(
         props.fetchLink?.(pkId) ?? `https://pokeapi.co/api/v2/pokemon/${pkId}`
       );
@@ -169,7 +176,7 @@ export default function PkGuesser({
         flex: 1,
       }}
     >
-      <style jsx>{`
+      <style jsx={true}>{`
         .input-container {
           position: relative;
           z-index: 0;
@@ -290,7 +297,7 @@ export default function PkGuesser({
             <div
               className="overflow-clip text-neutral-400"
               style={{
-                animationName: answer !== '' ? "show-answer": 'unset',
+                animationName: answer !== "" ? "show-answer" : "unset",
                 animationDuration: "1.5s",
                 animationFillMode: "both",
                 animationTimingFunction: "ease-in-out",
@@ -398,3 +405,23 @@ export default function PkGuesser({
 }
 
 export const useQuiz = () => {};
+
+function getRandomInRanges(ranges: [number, number][]) {
+  // Calculate the total length of all ranges combined
+  const totalLength = ranges.reduce((sum, [min, max]) => sum + (max - min + 1), 0);
+
+  // Pick a random number from 0 to totalLength - 1
+  let randomIndex = Math.floor(Math.random() * totalLength);
+
+  // Find which range the random number falls into
+  for (const [min, max] of ranges) {
+      const rangeLength = max - min + 1;
+      if (randomIndex < rangeLength) {
+          return min + randomIndex;
+      }
+      randomIndex -= rangeLength;
+  }
+
+  // In case of an empty range array (shouldn't happen if ranges are valid)
+  return null;
+}

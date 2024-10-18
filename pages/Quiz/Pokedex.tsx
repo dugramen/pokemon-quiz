@@ -75,7 +75,7 @@ export default function Pokedex(props: any) {
   };
 
   const renderedClues = Object.values(clues).map(
-    (clue, i) => <div key={i}>{clue?.(pkData)}</div> ?? "Error"
+    (clue, i) => clue ? <div key={i}>{clue?.(pkData)}</div> : "Error"
   );
 
   return (
@@ -103,7 +103,7 @@ export default function Pokedex(props: any) {
 
       <PkGuesser
         onHint={unusedKeys.length > 0 ? addClue : undefined}
-        hintCost={.2}
+        hintCost={0.2}
         customFetchHandler={async (id) => {
           setClues({});
 
