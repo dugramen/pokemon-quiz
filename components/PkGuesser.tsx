@@ -144,7 +144,7 @@ export default function PkGuesser({
     // let pkId = Math.ceil(Math.random() * 900);
     const ranges = generations.map(gen => [genRangesPokemon[gen - 1], genRangesPokemon[gen]] as [number, number])
     const pkId = getRandomInRanges(ranges) ?? Math.ceil(Math.random() * 900);
-    console.log(`custom fetching ${pkId} ${PokeMap[pkId].name}`);
+    // console.log(`custom fetching ${pkId} ${PokeMap[pkId].name}`);
     if (props.customFetchHandler) {
       props?.customFetchHandler?.(pkId);
       setPkName(PokeMap[pkId].name);
