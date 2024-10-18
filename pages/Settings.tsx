@@ -8,6 +8,9 @@ export default function SettingsPage() {
   const [tempGens, setTempGens] = useState(generations);
   const genMap = new Set(generations ?? []);
   const tempGenMap = new Set(tempGens ?? []);
+  const hasChanged = !allGenerations.every(
+    (gen) => tempGenMap.has(gen) === genMap.has(gen)
+  );
   // const genMap = useMemo(() => new Set(generations), [generations]);
 
   // console.log({genMap, tempGens})
@@ -28,7 +31,11 @@ export default function SettingsPage() {
         setGenerations(gens);
       }}
     >
-      <label className="flex flex-row items-center py-2 w-full">
+      <div className="text-lg">Choose Generations to include</div>
+      <div className="text-xs opacity-75">
+        If none are selected, all generations will be included
+      </div>
+      <label className="flex flex-row gap-2 items-center">
         <input
           type="checkbox"
           onChange={(e) => {
@@ -44,7 +51,7 @@ export default function SettingsPage() {
           checked={tempGens.length > 0}
           // className="self-start my-1"
         />
-        <div className="min-w-0 flex-1"></div>
+        <div className="opacity-0">Generation 0</div>
       </label>
       {allGenerations.map((gen) => (
         <label key={gen} className="flex flex-row gap-2 py-1 items-center">
@@ -66,11 +73,9 @@ export default function SettingsPage() {
       ))}
       <button
         className="px-3 py-1 my-2 rounded-md bg-neutral-800 disabled:opacity-50"
-        disabled={allGenerations.every(
-          (gen) => tempGenMap.has(gen) === genMap.has(gen)
-        )}
+        disabled={!hasChanged}
       >
-        Save
+        {hasChanged ? "Save" : "Saved"}
       </button>
     </form>
   );
