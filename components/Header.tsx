@@ -41,7 +41,7 @@ export default function Header() {
         {/* <FaBurst/> */}
         Moves
       </NavLink>
-      <NavLink href={"/Settings"} className="ml-auto" setMenuOpen={setMenuOpen}>
+      <NavLink href={"/Settings"} className="md:ml-auto" setMenuOpen={setMenuOpen}>
         <IoSettingsOutline />
         Settings
       </NavLink>
@@ -157,7 +157,7 @@ export default function Header() {
 
             <div className={`modal ${menuOpen ? "opened" : "closed"}`}>
               <button onClick={() => setMenuOpen(false)}>X</button>
-              <div className="mobile-menu">{navLinks}</div>
+              <div className="mobile-menu overflow-auto w-full">{navLinks}</div>
             </div>
           </div>
         ) : (
