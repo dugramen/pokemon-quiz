@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { PokeMap } from "./PokeMap";
 import { cacheFetch } from "./Utils";
 import { PokeList, ScoreContext } from "../pages/_app";
@@ -49,25 +49,36 @@ export default function PkGuesser({
   const [tries, setTries] = useState(maxTries);
   const [points, setPoints] = useState(1.0);
   const [answer, setAnswer] = useState("");
-  const router = useRouter()
+  // const router = useRouter()
 
   const [pkName, setPkName] = React.useState<any>(null);
   const firstRender = React.useRef(true);
   const inputRef = React.useRef<HTMLInputElement>();
 
   const { score, setScore } = useContext(ScoreContext);
-  const {generations} = useContext(GenerationsContext)
+  const { generations } = useContext(GenerationsContext);
+  const ranges = useMemo(
+    () =>
+      generations.map(
+        (gen) =>
+          [genRangesPokemon[gen - 1], genRangesPokemon[gen]] as [number, number]
+      ),
+    [generations]
+  );
 
   const pokes = useContext(PokeList);
   const list = props.guessList ?? Object.keys(pokes ?? {});
   // const pokeList = Object.keys(pokes ?? {});
   const filteredPokes = list.filter(
-    (poke) => text && poke.toLowerCase().includes(text.toLowerCase())
+    (poke, i) =>
+      text &&
+      isNumberInRanges(i, ranges) &&
+      poke.toLowerCase().includes(text.toLowerCase())
   );
 
   useEffect(() => {
     if (!firstRender.current) {
-      console.log('getting new pokemon ', generations)
+      console.log("getting new pokemon ", generations);
       fetchNewPokemon().catch(console.error);
     }
     firstRender.current = false;
@@ -142,14 +153,12 @@ export default function PkGuesser({
 
   async function fetchNewPokemon() {
     // let pkId = Math.ceil(Math.random() * 900);
-    const ranges = generations.map(gen => [genRangesPokemon[gen - 1], genRangesPokemon[gen]] as [number, number])
     const pkId = getRandomInRanges(ranges) ?? Math.ceil(Math.random() * 900);
     // console.log(`custom fetching ${pkId} ${PokeMap[pkId].name}`);
     if (props.customFetchHandler) {
       props?.customFetchHandler?.(pkId);
       setPkName(PokeMap[pkId].name);
     } else {
-
       const res = await cacheFetch(
         props.fetchLink?.(pkId) ?? `https://pokeapi.co/api/v2/pokemon/${pkId}`
       );
@@ -408,20 +417,32 @@ export const useQuiz = () => {};
 
 function getRandomInRanges(ranges: [number, number][]) {
   // Calculate the total length of all ranges combined
-  const totalLength = ranges.reduce((sum, [min, max]) => sum + (max - min + 1), 0);
+  const totalLength = ranges.reduce(
+    (sum, [min, max]) => sum + (max - min + 1),
+    0
+  );
 
   // Pick a random number from 0 to totalLength - 1
   let randomIndex = Math.floor(Math.random() * totalLength);
 
   // Find which range the random number falls into
   for (const [min, max] of ranges) {
-      const rangeLength = max - min + 1;
-      if (randomIndex < rangeLength) {
-          return min + randomIndex;
-      }
-      randomIndex -= rangeLength;
+    const rangeLength = max - min + 1;
+    if (randomIndex < rangeLength) {
+      return min + randomIndex;
+    }
+    randomIndex -= rangeLength;
   }
 
   // In case of an empty range array (shouldn't happen if ranges are valid)
   return null;
+}
+
+function isNumberInRanges(number, ranges) {
+  for (const [min, max] of ranges) {
+    if (number >= min && number <= max) {
+      return true;
+    }
+  }
+  return false;
 }
