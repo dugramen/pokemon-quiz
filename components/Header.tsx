@@ -2,7 +2,7 @@ import React, { ComponentProps, useContext } from "react";
 import Link from "next/link";
 import { GenerationsContext } from "./generations";
 import { twMerge } from "tailwind-merge";
-// import { FaGear } from "react-icons/fa6";
+import { FaBurst } from "react-icons/fa6";
 import {IoSettingsOutline} from 'react-icons/io5'
 
 export default function Header() {
@@ -13,6 +13,7 @@ export default function Header() {
     "Type",
     "Item",
     "Cries",
+    "Abilities"
   ];
   const [width, setWidth] = React.useState<any>(700);
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -36,6 +37,10 @@ export default function Header() {
           {quiz}
         </NavLink>
       ))}
+      <NavLink href={'/Quiz/Moves'} setMenuOpen={setMenuOpen}>
+        {/* <FaBurst/> */}
+        Moves
+      </NavLink>
       <NavLink href={"/Settings"} className="ml-auto" setMenuOpen={setMenuOpen}>
         <IoSettingsOutline />
         Settings

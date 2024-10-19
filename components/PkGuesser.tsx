@@ -35,11 +35,15 @@ interface Props {
   maxTries?: number;
   hintCost?: number;
   customAnswer?: string;
+  genRanges?: number[];
+  idToName?: (id: number) => string;
 }
 
 export default function PkGuesser({
   maxTries = 3,
   hintCost = 0.4,
+  genRanges = genRangesPokemon,
+  idToName = (id) => PokeMap[id].name,
   ...props
 }: Props & { className?: string }) {
   const [animState, setAnimState] = React.useState(0);
@@ -60,8 +64,7 @@ export default function PkGuesser({
   const ranges = useMemo(
     () =>
       generations.map(
-        (gen) =>
-          [genRangesPokemon[gen - 1], genRangesPokemon[gen]] as [number, number]
+        (gen) => [genRanges[gen - 1], genRanges[gen]] as [number, number]
       ),
     [generations]
   );
@@ -69,11 +72,15 @@ export default function PkGuesser({
   const pokes = useContext(PokeList);
   const list = props.guessList ?? Object.keys(pokes ?? {});
   // const pokeList = Object.keys(pokes ?? {});
-  const filteredPokes = list.filter(
-    (poke, i) =>
-      text &&
-      (props.guessList ? true : isNumberInRanges(i, ranges)) &&
-      poke.toLowerCase().includes(text.toLowerCase())
+  const rangedList = useMemo(
+    () =>
+      list.filter((poke, i) =>
+        props.guessList ? true : isNumberInRanges(i, ranges)
+      ),
+    [props.guessList, ranges]
+  );
+  const filteredPokes = rangedList.filter(
+    (poke, i) => text && poke.toLowerCase().includes(text.toLowerCase())
   );
 
   useEffect(() => {
@@ -153,7 +160,8 @@ export default function PkGuesser({
 
   async function fetchNewPokemon() {
     // let pkId = Math.ceil(Math.random() * 900);
-    const pkId = getRandomInRanges(ranges) ?? Math.ceil(Math.random() * 900);
+    const pkId =
+      getRandomInRanges(ranges) ?? Math.ceil(Math.random() * list.length);
     // console.log(`custom fetching ${pkId} ${PokeMap[pkId].name}`);
     if (props.customFetchHandler) {
       props?.customFetchHandler?.(pkId);
@@ -165,7 +173,7 @@ export default function PkGuesser({
       if (res) {
         const data = await res.json();
         props?.onNewData?.(data);
-        setPkName(PokeMap[pkId].name);
+        setPkName(idToName(pkId));
       }
     }
   }
@@ -388,20 +396,23 @@ export default function PkGuesser({
           overflow: "auto",
         }}
       >
-        {filteredPokes.map((poke) => (
-          <div
-            key={poke}
-            className="hover:bg-gray-900 px-2 rounded-lg cursor-pointer"
-            onClick={() => {
-              // setText(poke);
-              inputRef.current && (inputRef.current.value = poke);
-              submitGuess(false);
-              // inputRef.current && (inputRef.current.value = "");
-            }}
-          >
-            {poke}
-          </div>
-        ))}
+        {filteredPokes.map(
+          (poke, i) =>
+            i < 20 && (
+              <div
+                key={poke}
+                className="hover:bg-gray-900 px-2 rounded-lg cursor-pointer"
+                onClick={() => {
+                  // setText(poke);
+                  inputRef.current && (inputRef.current.value = poke);
+                  submitGuess(false);
+                  // inputRef.current && (inputRef.current.value = "");
+                }}
+              >
+                {poke}
+              </div>
+            )
+        )}
       </div>
 
       {/* {backElement && createPortal(
