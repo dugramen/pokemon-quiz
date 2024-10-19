@@ -72,7 +72,7 @@ export default function PkGuesser({
   const filteredPokes = list.filter(
     (poke, i) =>
       text &&
-      isNumberInRanges(i, ranges) &&
+      (props.guessList ? true : isNumberInRanges(i, ranges)) &&
       poke.toLowerCase().includes(text.toLowerCase())
   );
 
